@@ -452,6 +452,7 @@ fn do_mir_borrowck<'a, 'tcx>(
     };
 
     debug!("do_mir_borrowck: result = {:#?}", result);
+    println!("hi");
 
     (result, body_with_facts)
 }
