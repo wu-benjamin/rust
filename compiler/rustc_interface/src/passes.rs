@@ -5,6 +5,7 @@ use crate::util;
 use ast::CRATE_NODE_ID;
 use rustc_ast::{self as ast, visit};
 use rustc_borrowck as mir_borrowck;
+use rustc_symbolic_exec as mir_symbolic_exec;
 use rustc_codegen_ssa::back::link::emit_metadata;
 use rustc_codegen_ssa::traits::CodegenBackend;
 use rustc_data_structures::parallel;
@@ -782,7 +783,7 @@ pub static DEFAULT_QUERY_PROVIDERS: SyncLazy<Providers> = SyncLazy::new(|| {
     rustc_middle::hir::provide(providers);
     mir_borrowck::provide(providers);
     mir_build::provide(providers);
-    rustc_symbolic_exec::provide(providers);
+    mir_symbolic_exec::provide(providers);
     rustc_mir_transform::provide(providers);
     rustc_monomorphize::provide(providers);
     rustc_privacy::provide(providers);
@@ -954,6 +955,10 @@ fn analysis(tcx: TyCtxt<'_>, (): ()) -> Result<()> {
     sess.time("MIR_borrow_checking", || {
         tcx.hir().par_body_owners(|def_id| tcx.ensure().mir_borrowck(def_id));
     });
+
+    // sess.time("MIR_symbolic_execution", || {
+    //     tcx.hir().par_body_owners(|def_id| tcx.ensure().mir_symbolic_exec(def_id));
+    // });
 
     sess.time("MIR_effect_checking", || {
         for def_id in tcx.hir().body_owners() {
