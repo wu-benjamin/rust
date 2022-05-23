@@ -12,21 +12,31 @@
 #![feature(try_blocks)]
 #![recursion_limit = "256"]
 
+use rustc_data_structures::graph::WithNumNodes;
+use rustc_data_structures::graph::WithStartNode;
+use rustc_data_structures::graph::WithSuccessors;
 use smallvec::SmallVec;
 
 use rustc_data_structures::vec_map::VecMap;
 use rustc_hir::def_id::LocalDefId;
 // use rustc_index::vec::IndexVec;
 // use rustc_infer::infer::{TyCtxtInferExt};
-// use rustc_middle::mir::{Body};
-use rustc_middle::mir::{BorrowCheckResult};
+use rustc_middle::mir::{Body};
+use rustc_middle::mir::BorrowCheckResult;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
 
 pub fn provide(providers: &mut Providers) {
     *providers = Providers {
         mir_symbolic_exec: |tcx, did| {
-            mir_symbolic_exec(tcx, ty::WithOptConstParam::unknown(did))
+            if let Some(def) = ty::WithOptConstParam::try_lookup(did, tcx) {
+                tcx.mir_symbolic_exec_const_arg(def)
+            } else {
+                mir_symbolic_exec(tcx, ty::WithOptConstParam::unknown(did))
+            }
+        },
+        mir_symbolic_exec_const_arg: |tcx, (did, param_did)| {
+            mir_symbolic_exec(tcx, ty::WithOptConstParam { did, const_param_did: Some(param_did) })
         },
         ..*providers
     };
@@ -36,12 +46,22 @@ fn mir_symbolic_exec<'tcx>(
     tcx: TyCtxt<'tcx>,
     _def: ty::WithOptConstParam<LocalDefId>,
 ) -> &'tcx BorrowCheckResult<'tcx> {
-    // let (input_body, promoted) = tcx.mir_promoted(_def);
-    // let input_body: &Body<'_> = &input_body.borrow();
-    // let promoted: &IndexVec<_, _> = &promoted.borrow();
+    let (_input_body, _promoted) = tcx.mir_promoted(_def);
 
-    // println!("{:?}", input_body);
-    // println!("{:?}", promoted);
+    let _to_print_input_body: &Body<'_> = &_input_body.borrow();
+    println!("nebulus hi");
+    println!("{}", _to_print_input_body.num_nodes());
+    _to_print_input_body.basic_blocks().iter().for_each(
+        |bb| {
+            println!("{:?}", bb.statements.len());
+        }
+    );
+    println!("{:?}", _to_print_input_body.start_node());
+    println!("{:?}", _to_print_input_body.successors(_to_print_input_body.start_node()));
+    // let _to_print_promoted: &IndexVec<_, _> = &_promoted.borrow();
+
+    // println!("{:?}", _to_print_input_body);
+    // println!("{:?}", _to_print_promoted);
 
     // println!("run query mir_symbolic_exec: {}", tcx.def_path_str(def.did.to_def_id()));
     // let hir_owner = tcx.hir().local_def_id_to_hir_id(def.did).owner;
@@ -69,11 +89,10 @@ fn mir_symbolic_exec<'tcx>(
         concrete_opaque_types: VecMap::new(),
         closure_requirements: None,
         used_mut_upvars: SmallVec::new(),
-        tainted_by_errors: None
+        tainted_by_errors: None,
     };
 
     println!("mir_symbolic_exec done");
-
 
     tcx.arena.alloc(result)
 }

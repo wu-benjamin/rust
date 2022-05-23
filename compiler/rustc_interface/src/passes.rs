@@ -5,7 +5,6 @@ use crate::util;
 use ast::CRATE_NODE_ID;
 use rustc_ast::{self as ast, visit};
 use rustc_borrowck as mir_borrowck;
-use rustc_symbolic_exec as mir_symbolic_exec;
 use rustc_codegen_ssa::back::link::emit_metadata;
 use rustc_codegen_ssa::traits::CodegenBackend;
 use rustc_data_structures::parallel;
@@ -36,6 +35,7 @@ use rustc_session::search_paths::PathKind;
 use rustc_session::{Limit, Session};
 use rustc_span::symbol::{sym, Symbol};
 use rustc_span::FileName;
+use rustc_symbolic_exec as mir_symbolic_exec;
 use rustc_trait_selection::traits;
 use rustc_typeck as typeck;
 use tempfile::Builder as TempFileBuilder;
@@ -956,9 +956,9 @@ fn analysis(tcx: TyCtxt<'_>, (): ()) -> Result<()> {
         tcx.hir().par_body_owners(|def_id| tcx.ensure().mir_borrowck(def_id));
     });
 
-    // sess.time("MIR_symbolic_execution", || {
-    //     tcx.hir().par_body_owners(|def_id| tcx.ensure().mir_symbolic_exec(def_id));
-    // });
+    sess.time("MIR_symbolic_execution", || {
+        tcx.hir().par_body_owners(|def_id| tcx.ensure().mir_symbolic_exec(def_id));
+    });
 
     sess.time("MIR_effect_checking", || {
         for def_id in tcx.hir().body_owners() {

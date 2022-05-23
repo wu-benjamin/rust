@@ -365,7 +365,7 @@ fn mir_drops_elaborated_and_const_checked<'tcx>(
     }
 
     let mir_borrowck = tcx.mir_borrowck_opt_const_arg(def);
-    let _mir_symbolic_exec = tcx.mir_symbolic_exec(def.did);
+    let _mir_symbolic_exec = tcx.mir_symbolic_exec_opt_const_arg(def);
 
     let is_fn_like = tcx.def_kind(def.did).is_fn_like();
     if is_fn_like {
