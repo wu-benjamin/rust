@@ -55,6 +55,7 @@ use self::diagnostics::{AccessKind, RegionName};
 use self::location::LocationTable;
 use self::prefixes::PrefixSet;
 use facts::AllFacts;
+use z3::{Sort, Config, Context, Solver, SatResult};
 
 use self::path_utils::*;
 
@@ -453,6 +454,37 @@ fn do_mir_borrowck<'a, 'tcx>(
 
     debug!("do_mir_borrowck: result = {:#?}", result);
     println!("hi");
+
+    let mut cfg = Config::new();
+    cfg.set_proof_generation(true);
+    println!("created the cfg");
+
+    let ctx = Context::new(&cfg);
+    println!("created the ctx");
+
+    let solver = Solver::new(&ctx);
+
+    let (_colors, color_consts, color_testers) = Sort::enumeration(
+        &ctx,
+        "Color".into(),
+        &[
+            "Red".into(),
+            "Green".into(),
+            "Blue".into(),
+        ],
+    );
+
+    let red_const = color_consts[0].apply(&[]);
+    let red_tester = &color_testers[0];
+    let eq = red_tester.apply(&[&red_const]);
+
+    assert_eq!(solver.check(), SatResult::Sat);
+    let model = solver.get_model().unwrap();
+
+    println!("model1: {}", model.eval(&eq, true).unwrap().as_bool().unwrap().to_string());
+
+    assert!(model.eval(&eq, true).unwrap().as_bool().unwrap().as_bool().unwrap());
+
 
     (result, body_with_facts)
 }
