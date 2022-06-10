@@ -55,7 +55,8 @@ use self::diagnostics::{AccessKind, RegionName};
 use self::location::LocationTable;
 use self::prefixes::PrefixSet;
 use facts::AllFacts;
-use z3::{Sort, Config, Context, Solver, SatResult};
+use z3::{Config, Context, Solver, SatResult, ast};
+use z3::ast::Ast;
 
 use self::path_utils::*;
 
@@ -464,26 +465,29 @@ fn do_mir_borrowck<'a, 'tcx>(
 
     let solver = Solver::new(&ctx);
 
-    let (_colors, color_consts, color_testers) = Sort::enumeration(
-        &ctx,
-        "Color".into(),
-        &[
-            "Red".into(),
-            "Green".into(),
-            "Blue".into(),
-        ],
-    );
+    // Unsatisfiable
+    let bv = ast::BV::new_const(&ctx, "x", 32);
+    solver.assert(&bv._eq(&ast::BV::from_i64(&ctx, -3, 32)));
+    solver.assert(&bv._eq(&ast::BV::from_i64(&ctx, 0, 32)));
 
-    let red_const = color_consts[0].apply(&[]);
-    let red_tester = &color_testers[0];
-    let eq = red_tester.apply(&[&red_const]);
+    assert_eq!(solver.check(), SatResult::Unsat);
+    println!("model1: {:?}", solver.check());
+
+    // Satisfiable
+    let solver = Solver::new(&ctx);
+
+    let bv = ast::BV::new_const(&ctx, "x", 32);
+    solver.assert(&bv._eq(&ast::BV::from_i64(&ctx, -3, 32)));
+
+    let x = ast::Int::from_bv(&bv, true);
 
     assert_eq!(solver.check(), SatResult::Sat);
     let model = solver.get_model().unwrap();
 
-    println!("model1: {}", model.eval(&eq, true).unwrap().as_bool().unwrap().to_string());
+    assert_eq!(-3, model.eval(&x, true).unwrap().as_i64().unwrap());
 
-    assert!(model.eval(&eq, true).unwrap().as_bool().unwrap().as_bool().unwrap());
+    println!("model2: {:?}", model.eval(&x, true).unwrap().as_i64().unwrap());
+    println!("x: {:?}", x.to_string());
 
 
     (result, body_with_facts)
