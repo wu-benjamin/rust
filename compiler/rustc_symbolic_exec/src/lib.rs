@@ -59,7 +59,7 @@ fn mir_symbolic_exec<'tcx>(
             debug!("Node: {:?}", bb);
         }
     );
-    
+
     debug!("Start Node: {:?}", _to_print_input_body.start_node());
     _to_print_input_body.successors(_to_print_input_body.start_node()).for_each(
         |bb| {
