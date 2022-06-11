@@ -1,9 +1,24 @@
+fn foo(
+    c1: bool, c2: bool, x: u64
+) -> u64 {
+  let r = if c1 {
+    x+3
+  } else {
+    x+4
+  };
+
+  let r = if c2 {
+    r-1
+  } else {
+    r-2
+  };
+  r
+}
+// spec foo {
+//     ensures r > x;
+// }
+
 fn main() {
-    let mut x: i32 = 3;
-    if x > 0 {
-        x = 1;
-    } else {
-        x = 0;
-    }
-    println!("Hello world! {}", x);
+    // println!("{}", foo(false, true, 13))
+    foo(false, true, 13);
 }
