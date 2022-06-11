@@ -12,6 +12,8 @@
 #![feature(try_blocks)]
 #![recursion_limit = "256"]
 
+use tracing::debug;
+
 use rustc_data_structures::graph::WithNumNodes;
 use rustc_data_structures::graph::WithStartNode;
 use rustc_data_structures::graph::WithSuccessors;
@@ -42,6 +44,8 @@ pub fn provide(providers: &mut Providers) {
     };
 }
 
+
+
 fn mir_symbolic_exec<'tcx>(
     tcx: TyCtxt<'tcx>,
     _def: ty::WithOptConstParam<LocalDefId>,
@@ -49,15 +53,19 @@ fn mir_symbolic_exec<'tcx>(
     let (_input_body, _promoted) = tcx.mir_promoted(_def);
 
     let _to_print_input_body: &Body<'_> = &_input_body.borrow();
-    println!("nebulus hi");
-    println!("{}", _to_print_input_body.num_nodes());
+    debug!("Number of Nodes: {}", _to_print_input_body.num_nodes());
     _to_print_input_body.basic_blocks().iter().for_each(
         |bb| {
-            println!("{:?}", bb.statements.len());
+            debug!("Node: {:?}", bb);
         }
     );
-    println!("{:?}", _to_print_input_body.start_node());
-    println!("{:?}", _to_print_input_body.successors(_to_print_input_body.start_node()));
+    
+    debug!("Start Node: {:?}", _to_print_input_body.start_node());
+    _to_print_input_body.successors(_to_print_input_body.start_node()).for_each(
+        |bb| {
+            debug!("Successor to Start: {:?}", bb);
+        }
+    );
     // let _to_print_promoted: &IndexVec<_, _> = &_promoted.borrow();
 
     // println!("{:?}", _to_print_input_body);
@@ -92,7 +100,7 @@ fn mir_symbolic_exec<'tcx>(
         tainted_by_errors: None,
     };
 
-    println!("mir_symbolic_exec done");
+    debug!("mir_symbolic_exec done");
 
     tcx.arena.alloc(result)
 }

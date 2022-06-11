@@ -401,6 +401,8 @@ fn mir_drops_elaborated_and_const_checked<'tcx>(
     }
 
     run_post_borrowck_cleanup_passes(tcx, &mut body);
+    // maybe work with ref of body
+    // let _mir_symbolic_exec = tcx.mir_symbolic_exec_opt_const_arg(def);
 
     assert!(body.phase == MirPhase::Deaggregated);
     tcx.alloc_steal_mir(body)
