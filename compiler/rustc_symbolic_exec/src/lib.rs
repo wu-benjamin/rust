@@ -115,7 +115,7 @@ fn get_forward_edges(body: &Body<'_>) -> FxHashMap::<String, FxHashSet<String>> 
                 }
                 TerminatorKind::Drop{..} => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },     
+                },
                 TerminatorKind::DropAndReplace{..} => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
                 },
@@ -154,7 +154,7 @@ fn get_forward_edges(body: &Body<'_>) -> FxHashMap::<String, FxHashSet<String>> 
                 TerminatorKind::InlineAsm{..} => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
                 }
-            }        
+            }
         } else {
             debug!("\tNo terminator");
         }
