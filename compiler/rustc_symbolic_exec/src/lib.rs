@@ -34,6 +34,9 @@ use rustc_middle::mir::StatementKind;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
 
+pub mod z3_builder;
+pub mod z3_example;
+
 const COMMON_END_NODE: &str = "common_end";
 
 pub fn provide(providers: &mut Providers) {
