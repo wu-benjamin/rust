@@ -1111,10 +1111,7 @@ impl<'tcx> TyCtxt<'tcx> {
         }
     }
 
-    pub fn mir_symbolic_exec_opt_const_arg(
-        self,
-        def: ty::WithOptConstParam<LocalDefId>,
-    ) -> () {
+    pub fn mir_symbolic_exec_opt_const_arg(self, def: ty::WithOptConstParam<LocalDefId>) -> () {
         if let Some(param_did) = def.const_param_did {
             self.mir_symbolic_exec_const_arg((def.did, param_did))
         } else {

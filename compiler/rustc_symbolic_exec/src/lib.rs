@@ -14,8 +14,8 @@
 
 use tracing::debug;
 
-use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::fx::FxHashMap;
+use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::WithNumNodes;
 use rustc_data_structures::graph::WithStartNode;
 use rustc_data_structures::graph::WithSuccessors;
@@ -27,12 +27,12 @@ use rustc_hir::def_id::LocalDefId;
 // use rustc_infer::infer::{TyCtxtInferExt};
 use rustc_middle::mir::Body;
 // use rustc_middle::mir::BorrowCheckResult;
+use rustc_middle::mir::terminator::TerminatorKind;
+use rustc_middle::mir::BasicBlock;
+use rustc_middle::mir::Local;
+use rustc_middle::mir::StatementKind;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
-use rustc_middle::mir::BasicBlock;
-use rustc_middle::mir::StatementKind;
-use rustc_middle::mir::Local;
-use rustc_middle::mir::terminator::TerminatorKind;
 
 const COMMON_END_NODE: &str = "common_end";
 
@@ -71,13 +71,13 @@ fn pretty_print_mir_body(body: &Body<'_>) -> () {
         }
         if let Some(terminator) = &body.basic_blocks()[BasicBlock::from_usize(i)].terminator {
             debug!("\tTerminator: {:?}", terminator.kind);
-            // match &terminator.kind {
-            //     TerminatorKind::Call{..} => {
-            //         debug!("is call!");
-            //     },
-            //     _ => (),
-            // }
-            } else {
+        // match &terminator.kind {
+        //     TerminatorKind::Call{..} => {
+        //         debug!("is call!");
+        //     },
+        //     _ => (),
+        // }
+        } else {
             debug!("\tNo terminator");
         }
     }
@@ -87,39 +87,39 @@ fn pretty_print_mir_body(body: &Body<'_>) -> () {
     });
 }
 
-fn get_forward_edges(body: &Body<'_>) -> FxHashMap::<String, FxHashSet<String>> {
+fn get_forward_edges(body: &Body<'_>) -> FxHashMap<String, FxHashSet<String>> {
     let mut all_edges = FxHashMap::default();
     for i in 0..body.num_nodes() {
         let mut node_edges = FxHashSet::default();
         if let Some(terminator) = &body.basic_blocks()[BasicBlock::from_usize(i)].terminator {
             match &terminator.kind {
-                TerminatorKind::Goto{target} => {
+                TerminatorKind::Goto { target } => {
                     node_edges.insert(target.index().to_string());
-                },
-                TerminatorKind::SwitchInt{targets, ..} => {
+                }
+                TerminatorKind::SwitchInt { targets, .. } => {
                     for j in 0..targets.all_targets().len() {
                         node_edges.insert(targets.all_targets()[j].index().to_string());
                     }
-                },
+                }
                 TerminatorKind::Resume => {
                     node_edges.insert(String::from(COMMON_END_NODE));
-                },
+                }
                 TerminatorKind::Abort => {
                     node_edges.insert(String::from(COMMON_END_NODE));
-                },
+                }
                 TerminatorKind::Return => {
                     node_edges.insert(String::from(COMMON_END_NODE));
-                },
+                }
                 TerminatorKind::Unreachable => {
                     node_edges.insert(String::from(COMMON_END_NODE));
                 }
-                TerminatorKind::Drop{..} => {
+                TerminatorKind::Drop { .. } => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },
-                TerminatorKind::DropAndReplace{..} => {
+                }
+                TerminatorKind::DropAndReplace { .. } => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },
-                TerminatorKind::Call{destination, cleanup, ..} => {
+                }
+                TerminatorKind::Call { destination, cleanup, .. } => {
                     let mut has_successor = false;
                     if let Some(destination) = destination {
                         node_edges.insert(destination.1.index().to_string());
@@ -132,26 +132,26 @@ fn get_forward_edges(body: &Body<'_>) -> FxHashMap::<String, FxHashSet<String>> 
                     if !has_successor {
                         debug!("Call Terminator has no successor — this is probably an error");
                     }
-                },
-                TerminatorKind::Assert{target, cleanup, ..} => {
+                }
+                TerminatorKind::Assert { target, cleanup, .. } => {
                     node_edges.insert(target.index().to_string());
                     if let Some(cleanup) = cleanup {
                         node_edges.insert(cleanup.index().to_string());
                     }
-                },
-                TerminatorKind::Yield{..} => {
+                }
+                TerminatorKind::Yield { .. } => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },
+                }
                 TerminatorKind::GeneratorDrop => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },
-                TerminatorKind::FalseEdge{..} => {
+                }
+                TerminatorKind::FalseEdge { .. } => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },
-                TerminatorKind::FalseUnwind{..} => {
+                }
+                TerminatorKind::FalseUnwind { .. } => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
-                },
-                TerminatorKind::InlineAsm{..} => {
+                }
+                TerminatorKind::InlineAsm { .. } => {
                     debug!("Terminator Kind {:?} Not implemented", terminator.kind);
                 }
             }
@@ -163,7 +163,7 @@ fn get_forward_edges(body: &Body<'_>) -> FxHashMap::<String, FxHashSet<String>> 
     return all_edges;
 }
 
-fn get_backward_edges(body: &Body<'_>) -> FxHashMap::<String, FxHashSet<String>> {
+fn get_backward_edges(body: &Body<'_>) -> FxHashMap<String, FxHashSet<String>> {
     let all_forward_edges = get_forward_edges(body);
     let mut all_backward_edges = FxHashMap::default();
     for i in 0..body.num_nodes() {
@@ -206,7 +206,7 @@ fn forward_topological_sort(body: &Body<'_>) -> Vec<String> {
         let mut next_node: Option<String> = None;
         for node in &unsorted {
             if let Some(indegree) = indegrees.get(&node.clone()) {
-                if indegree.eq(&0) {
+                if *indegree == 0 {
                     indegrees.insert(node, -1);
                     next_node = Some(node.to_string());
                     sorted.push(node.to_string());
@@ -225,11 +225,11 @@ fn forward_topological_sort(body: &Body<'_>) -> Vec<String> {
             Some(..) => {
                 // let next_node_index = unsorted.iter().position( |n| n == &next_node ).unwrap();
                 // unsorted.remove(next_node_index);
-            },
+            }
             None => {
                 debug!("MIR CFG is cyclic");
                 break;
-            },
+            }
         }
     }
     return sorted;
@@ -241,10 +241,7 @@ fn backward_topological_sort(body: &Body<'_>) -> Vec<String> {
     return sorted;
 }
 
-fn mir_symbolic_exec<'tcx>(
-    tcx: TyCtxt<'tcx>,
-    _def: ty::WithOptConstParam<LocalDefId>,
-) -> () {
+fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalDefId>) -> () {
     let (_input_body, _promoted) = tcx.mir_promoted(_def);
 
     pretty_print_mir_body(&_input_body.borrow());
@@ -256,8 +253,24 @@ fn mir_symbolic_exec<'tcx>(
     debug!("{:?}", _forward_topological_sort);
     let _backward_topological_sort = backward_topological_sort(&_input_body.borrow());
     debug!("{:?}", _backward_topological_sort);
-
-
+    // for node in _backward_topological_sort {
+        // code gen (c_1 || c_2 || ...) => {} from parents
+        /*
+        entry_conditions_node = []
+        if no parents {
+            entry_conditions_node.push(true);
+        } else {
+            for parent in parents {
+                entry_conditions.push(condition)
+            }
+        }
+        OR(entry_conditions_node) => code_
+        */
+        // code gen implicit panic = true assignment if node is cleanup
+        // code gen assignment
+        // code gen logical and of successor node variables
+        // assert !panic for only COMMON_END node
+    // }
 
     // debug!("Number of Nodes: {}", _to_print_input_body.num_nodes());
     // _to_print_input_body.basic_blocks().iter().for_each(|bb| {
