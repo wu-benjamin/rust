@@ -254,22 +254,22 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
     let _backward_topological_sort = backward_topological_sort(&_input_body.borrow());
     debug!("{:?}", _backward_topological_sort);
     // for node in _backward_topological_sort {
-        // code gen (c_1 || c_2 || ...) => {} from parents
-        /*
-        entry_conditions_node = []
-        if no parents {
-            entry_conditions_node.push(true);
-        } else {
-            for parent in parents {
-                entry_conditions.push(condition)
-            }
+    // code gen (c_1 || c_2 || ...) => {} from parents
+    /*
+    entry_conditions_node = []
+    if no parents {
+        entry_conditions_node.push(true);
+    } else {
+        for parent in parents {
+            entry_conditions.push(condition)
         }
-        OR(entry_conditions_node) => code_
-        */
-        // code gen implicit panic = true assignment if node is cleanup
-        // code gen assignment
-        // code gen logical and of successor node variables
-        // assert !panic for only COMMON_END node
+    }
+    OR(entry_conditions_node) => code_
+    */
+    // code gen implicit panic = true assignment if node is cleanup
+    // code gen assignment
+    // code gen logical and of successor node variables
+    // assert !panic for only COMMON_END node
     // }
 
     // debug!("Number of Nodes: {}", _to_print_input_body.num_nodes());
