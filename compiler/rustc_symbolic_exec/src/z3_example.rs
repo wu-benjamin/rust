@@ -1,5 +1,6 @@
 use crate::z3_builder::Z3Builder;
 use z3::{Config, Context, Solver};
+use tracing::debug;
 
 
 pub fn example_z3() -> () {

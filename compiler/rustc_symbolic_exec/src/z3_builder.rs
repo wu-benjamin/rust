@@ -1,4 +1,5 @@
 use z3::{ast::{Ast, self}, Solver, SatResult};
+use tracing::debug;
 
 pub struct Z3Builder<'a> {
     i_bool: i32,
@@ -21,6 +22,7 @@ impl Z3Builder<'_> {
         let x1 = ast::Bool::new_const(self.solver.get_context(), x1_name);
         let x2 = ast::Bool::new_const(self.solver.get_context(), x2_name);
 
+        // Dummy debug to use i_x struct fields
         debug!("solver: {:?} {:?} {:?}", self.i_bool, self.i_const, self.i_int);
 
         ast::Bool::and(&self.solver.get_context(), &[&x1, &x2])
@@ -88,7 +90,7 @@ impl Z3Builder<'_> {
 
         ast::Int::add(self.solver.get_context(), &[&x1, &x2])
     }
-    
+
     pub fn gen_const<'a>(&'a self, x1_name: &'a str, x2: i32) -> () {
         let x1 = ast::Int::new_const(self.solver.get_context(), x1_name);
         let unnamed_const = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), x2.into(), 32), true);
@@ -109,14 +111,14 @@ impl Z3Builder<'_> {
     }
 
     pub fn check_bounds<'a>(&'a self, x1: &ast::Int<'a>) -> ast::Bool<'a> {
-        
+
         let min_int = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), i32::MIN.into(), 32), true);
         let max_int = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), i32::MAX.into(), 32), true);
 
         ast::Bool::and(self.solver.get_context(), &[&x1.le(&max_int), &x1.ge(&min_int)])
     }
 
-    
+
     pub fn create_const_int<'a>(&'a mut self, x: i32) -> String {
         let x1_name = format!("_const_{}", self.i_const);
         self.i_const += 1;
@@ -161,7 +163,7 @@ impl Z3Builder<'_> {
             None
         }
     }
-    
+
     pub fn check_solver<'a>(&'a self) -> SatResult {
         return self.solver.check();
     }
