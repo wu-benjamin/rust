@@ -21,15 +21,15 @@ use rustc_data_structures::graph::WithStartNode;
 use rustc_data_structures::graph::WithSuccessors;
 
 use rustc_hir::def_id::LocalDefId;
-use rustc_middle::mir::Body;
 use rustc_middle::mir::terminator::TerminatorKind;
 use rustc_middle::mir::BasicBlock;
+use rustc_middle::mir::Body;
 use rustc_middle::mir::Local;
 use rustc_middle::mir::StatementKind;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
 
-use z3_example::{example_sat_z3,example_unsat_z3};
+use z3_example::{example_sat_z3, example_unsat_z3};
 
 pub mod z3_builder;
 pub mod z3_example;

@@ -1,7 +1,6 @@
 use crate::z3_builder::Z3Builder;
-use z3::{Config, Context, Solver};
 use tracing::debug;
-
+use z3::{Config, Context, Solver};
 
 pub fn example_sat_z3() -> () {
     // Initialize the Z3 and Builder objects
@@ -23,9 +22,13 @@ pub fn example_sat_z3() -> () {
 
     // Attempt resolving the model (and obtaining the respective values of x1, x2)
     debug!("Resolved value: {:?}", z3_builder.check_solver());
-    debug!("x1: {:?}; x2: {:?}; x_const: {:?}", z3_builder.resolve_variable("x1"), z3_builder.resolve_variable("x2"), z3_builder.resolve_variable("x_const"));
+    debug!(
+        "x1: {:?}; x2: {:?}; x_const: {:?}",
+        z3_builder.resolve_variable("x1"),
+        z3_builder.resolve_variable("x2"),
+        z3_builder.resolve_variable("x_const")
+    );
 }
-
 
 pub fn example_unsat_z3() -> () {
     // Initialize the Z3 and Builder objects
@@ -47,5 +50,10 @@ pub fn example_unsat_z3() -> () {
 
     // Attempt resolving the model (and obtaining the respective values of x1, x2)
     debug!("Resolved value: {:?}", z3_builder.check_solver());
-    debug!("x1: {:?}; x2: {:?}; x_const: {:?}", z3_builder.resolve_variable("x1"), z3_builder.resolve_variable("x2"), z3_builder.resolve_variable("x_const"));
+    debug!(
+        "x1: {:?}; x2: {:?}; x_const: {:?}",
+        z3_builder.resolve_variable("x1"),
+        z3_builder.resolve_variable("x2"),
+        z3_builder.resolve_variable("x_const")
+    );
 }

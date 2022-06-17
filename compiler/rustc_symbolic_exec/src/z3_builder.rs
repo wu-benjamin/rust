@@ -1,21 +1,19 @@
-use z3::{ast::{Ast, self}, Solver, SatResult};
 use tracing::debug;
+use z3::{
+    ast::{self, Ast},
+    SatResult, Solver,
+};
 
 pub struct Z3Builder<'a> {
     i_bool: i32,
     i_int: i32,
     i_const: i32,
-    solver: &'a Solver<'a>
+    solver: &'a Solver<'a>,
 }
 
 impl Z3Builder<'_> {
     pub fn new<'a>(solver: &'a Solver<'a>) -> Z3Builder<'a> {
-        Z3Builder {
-            i_bool: 0,
-            i_int: 0,
-            i_const: 0,
-            solver
-        }
+        Z3Builder { i_bool: 0, i_int: 0, i_const: 0, solver }
     }
 
     pub fn gen_land<'a>(&'a self, x1_name: &'a str, x2_name: &'a str) -> ast::Bool<'a> {
@@ -76,7 +74,6 @@ impl Z3Builder<'_> {
         x1.ge(&x2)
     }
 
-
     pub fn gen_mul<'a>(&'a self, x1_name: &'a str, x2_name: &'a str) -> ast::Int<'a> {
         let x1 = ast::Int::new_const(self.solver.get_context(), x1_name);
         let x2 = ast::Int::new_const(self.solver.get_context(), x2_name);
@@ -93,7 +90,8 @@ impl Z3Builder<'_> {
 
     pub fn gen_const<'a>(&'a self, x1_name: &'a str, x2: i32) -> () {
         let x1 = ast::Int::new_const(self.solver.get_context(), x1_name);
-        let unnamed_const = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), x2.into(), 32), true);
+        let unnamed_const =
+            ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), x2.into(), 32), true);
 
         self.add_assertion(&x1._eq(&unnamed_const));
     }
@@ -111,18 +109,23 @@ impl Z3Builder<'_> {
     }
 
     pub fn check_bounds<'a>(&'a self, x1: &ast::Int<'a>) -> ast::Bool<'a> {
-
-        let min_int = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), i32::MIN.into(), 32), true);
-        let max_int = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), i32::MAX.into(), 32), true);
+        let min_int = ast::Int::from_bv(
+            &ast::BV::from_i64(self.solver.get_context(), i32::MIN.into(), 32),
+            true,
+        );
+        let max_int = ast::Int::from_bv(
+            &ast::BV::from_i64(self.solver.get_context(), i32::MAX.into(), 32),
+            true,
+        );
 
         ast::Bool::and(self.solver.get_context(), &[&x1.le(&max_int), &x1.ge(&min_int)])
     }
 
-
     pub fn create_const_int<'a>(&'a mut self, x: i32) -> String {
         let x1_name = format!("_const_{}", self.i_const);
         self.i_const += 1;
-        let unnamed_const = ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), x.into(), 32), true);
+        let unnamed_const =
+            ast::Int::from_bv(&ast::BV::from_i64(self.solver.get_context(), x.into(), 32), true);
 
         let x1_const = ast::Int::new_const(&self.solver.get_context(), x1_name.clone());
         self.add_assertion(&x1_const._eq(&unnamed_const));
