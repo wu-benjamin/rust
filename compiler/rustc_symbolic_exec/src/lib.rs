@@ -19,14 +19,9 @@ use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::WithNumNodes;
 use rustc_data_structures::graph::WithStartNode;
 use rustc_data_structures::graph::WithSuccessors;
-// use smallvec::SmallVec;
 
-// use rustc_data_structures::vec_map::VecMap;
 use rustc_hir::def_id::LocalDefId;
-// use rustc_index::vec::IndexVec;
-// use rustc_infer::infer::{TyCtxtInferExt};
 use rustc_middle::mir::Body;
-// use rustc_middle::mir::BorrowCheckResult;
 use rustc_middle::mir::terminator::TerminatorKind;
 use rustc_middle::mir::BasicBlock;
 use rustc_middle::mir::Local;
@@ -275,49 +270,6 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
     // assert !panic for only COMMON_END node
     // }
 
-    // debug!("Number of Nodes: {}", _to_print_input_body.num_nodes());
-    // _to_print_input_body.basic_blocks().iter().for_each(|bb| {
-    //     debug!("Node: {:?}", bb);
-    // });
-
-    // debug!("Start Node: {:?}", _to_print_input_body.start_node());
-    // _to_print_input_body.successors(_to_print_input_body.start_node()).for_each(|bb| {
-    //     debug!("Successor to Start: {:?}", bb);
-    // });
-    // let _to_print_promoted: &IndexVec<_, _> = &_promoted.borrow();
-
-    // println!("{:?}", _to_print_input_body);
-    // println!("{:?}", _to_print_promoted);
-
-    // println!("run query mir_symbolic_exec: {}", tcx.def_path_str(def.did.to_def_id()));
-    // let hir_owner = tcx.hir().local_def_id_to_hir_id(def.did).owner;
-    //
-    // let opt_closure_req = tcx.infer_ctxt().with_opaque_type_inference(hir_owner).enter(|_infcx| {
-    //     let input_body: &Body<'_> = &input_body.borrow();
-    //     let promoted: &IndexVec<_, _> = &promoted.borrow();
-    //     println!("hi from mit_symbolic_exec closure");
-    //     let result = BorrowCheckResult {
-    //         concrete_opaque_types: VecMap::new(),
-    //         closure_requirements: None,
-    //         used_mut_upvars: SmallVec::new(),
-    //         tainted_by_errors: None
-    //     };
-    //     println!("{:?}", input_body);
-    //     println!("{:?}", promoted);
-    //     result
-    //     // pub concrete_opaque_types: VecMap<DefId, OpaqueHiddenType<'tcx>>,
-    //     // pub closure_requirements: Option<ClosureRegionRequirements<'tcx>>,
-    //     // pub used_mut_upvars: SmallVec<[Field; 8]>,
-    //     // pub tainted_by_errors: Option<ErrorGuaranteed>,
-    // });
-
     debug!("mir_symbolic_exec done");
 
-    // let result = BorrowCheckResult {
-    //     concrete_opaque_types: VecMap::new(),
-    //     closure_requirements: None,
-    //     used_mut_upvars: SmallVec::new(),
-    //     tainted_by_errors: None,
-    // };
-    // tcx.arena.alloc(result)
 }
