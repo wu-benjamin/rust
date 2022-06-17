@@ -29,6 +29,8 @@ use rustc_middle::mir::StatementKind;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
 
+use z3_example::{example_sat_z3,example_unsat_z3};
+
 pub mod z3_builder;
 pub mod z3_example;
 
@@ -272,4 +274,11 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
 
     debug!("mir_symbolic_exec done");
 
+    debug!("running satisfiable example Z3");
+    example_sat_z3();
+    debug!("example Z3 done");
+
+    debug!("running unsatisfiable example Z3");
+    example_unsat_z3();
+    debug!("example Z3 done");
 }
