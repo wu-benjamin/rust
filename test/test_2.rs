@@ -1,11 +1,3 @@
-// fn easy_neg_abs(x: i32) -> i32 {
-//     // let y = if x > 0 { -1 * x } else { x };
-//     // assert!(y <= 0);
-//     // return y;
-//     x + 1
-// }
-// 2147483648
-
 fn minus_one_safe(x: i32) -> i32 {
     if x > 0 {
         return x - 1;
@@ -32,7 +24,6 @@ fn abs(mut x: i32) -> i32 {
 }
 
 fn main() {
-    // println!("{}", easy_neg_abs(1));
     println!("{}", minus_one_safe(3));
     println!("{}", minus_one_unsafe(3));
     println!("{}", neg_abs(2));
