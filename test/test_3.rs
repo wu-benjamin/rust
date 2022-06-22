@@ -15,7 +15,6 @@ fn main() {
 
 // ********************************************************************
 
-
 // (declare-fun panic () Bool)
 // (declare-fun node_common_end () Bool)
 // (declare-fun node_3 () Bool)
