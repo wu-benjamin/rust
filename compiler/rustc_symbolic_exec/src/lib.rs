@@ -15,8 +15,8 @@ use tracing::debug;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::WithNumNodes;
-use rustc_data_structures::graph::WithStartNode;
-use rustc_data_structures::graph::WithSuccessors;
+// use rustc_data_structures::graph::WithStartNode;
+// use rustc_data_structures::graph::WithSuccessors;
 
 use rustc_hir::def_id::LocalDefId;
 use rustc_middle::mir::terminator::TerminatorKind;
@@ -92,10 +92,10 @@ fn pretty_print_mir_body(body: &Body<'_>) -> () {
             debug!("\tNo terminator");
         }
     }
-    debug!("Start Node: {:?}", body.start_node());
-    body.successors(body.start_node()).for_each(|bb| {
-        debug!("Successor to Start: {:?}", bb);
-    });
+    // debug!("Start Node: {:?}", body.start_node());
+    // body.successors(body.start_node()).for_each(|bb| {
+    //     debug!("Successor to Start: {:?}", bb);
+    // });
 }
 
 fn get_forward_edges(body: &Body<'_>) -> FxHashMap<String, FxHashSet<String>> {
@@ -291,10 +291,10 @@ fn get_entry_condition<'a>(
                                 );
                                 entry_condition = switch_var._eq(&typed_switch_value);
                             } else {
-                                debug!(
-                                    "Local Decl type {} not supported yet",
-                                    body.local_decls[place.local].ty.to_string()
-                                );
+                                // debug!(
+                                //     "Local Decl type {} not supported yet",
+                                //     body.local_decls[place.local].ty.to_string()
+                                // );
                             }
                         }
                         Operand::Move(place) => {
@@ -321,10 +321,10 @@ fn get_entry_condition<'a>(
                                 );
                                 entry_condition = switch_var._eq(&typed_switch_value);
                             } else {
-                                debug!(
-                                    "Local Decl type {} not supported yet",
-                                    body.local_decls[place.local].ty.to_string()
-                                );
+                                // debug!(
+                                //     "Local Decl type {} not supported yet",
+                                //     body.local_decls[place.local].ty.to_string()
+                                // );
                             }
                         }
                         Operand::Constant(constant) => {
@@ -346,7 +346,7 @@ fn get_entry_condition<'a>(
                                     true,
                                 );
                                 entry_condition = switch_var._eq(&typed_switch_value);
-                                debug!("Found constant {}", value);
+                                // debug!("Found constant {}", value);
                             } else {
                                 debug!("Failed to get entry condition for SwitchInt constant");
                             }
@@ -395,7 +395,7 @@ fn get_entry_condition<'a>(
                                 let switch_var =
                                     ast::Bool::from_bool(solver.get_context(), value != 0);
                                 entry_condition = switch_var._eq(&typed_switch_value);
-                                debug!("Found constant {}", value);
+                                // debug!("Found constant {}", value);
                             } else {
                                 debug!("Failed to get entry condition for Assert constant");
                             }
@@ -433,7 +433,7 @@ fn get_var_for_int_operand<'a>(
                     ),
                     true,
                 ));
-                debug!("Found constant {}", value);
+                // debug!("Found constant {}", value);
             } else {
                 debug!("Failed to code gen int constant operand");
                 operand_var = None;
@@ -458,7 +458,7 @@ fn get_var_for_bool_operand<'a>(
         Operand::Constant(constant) => {
             if let Some(scalar) = constant.literal.try_to_scalar() && let Some(value) = scalar.to_i8().ok() {
                 operand_var = Some(ast::Bool::from_bool(solver.get_context(), value != 0));
-                debug!("Found constant {}", value);
+                // debug!("Found constant {}", value);
             } else {
                 debug!("Failed to code gen bool constant operand");
                 operand_var = None;
@@ -506,7 +506,7 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
 
                         match rvalue {
                             Rvalue::Use(operand) => {
-                                debug!("{:?} is a Use", assignment);
+                                // debug!("{:?} is a Use", assignment);
                                 if body.local_decls[lvalue_place.local].ty.to_string() == "i32" {
                                     let lvalue_var = ast::Int::new_const(
                                         solver.get_context(),
@@ -534,38 +534,38 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
                                         node_var = assignment.implies(&node_var);
                                     }
                                 } else {
-                                    debug!(
-                                        "Local Decl type {} not supported yet",
-                                        body.local_decls[lvalue_place.local].ty.to_string()
-                                    );
+                                    // debug!(
+                                    //     "Local Decl type {} not supported yet",
+                                    //     body.local_decls[lvalue_place.local].ty.to_string()
+                                    // );
                                 }
                             }
                             Rvalue::Repeat(..) => {
-                                debug!("{:?} is a Repeat which we do not support yet", assignment);
+                                // debug!("{:?} is a Repeat which we do not support yet", assignment);
                             }
                             Rvalue::Ref(..) => {
-                                debug!("{:?} is a Ref which we do not support yet", assignment);
+                                // debug!("{:?} is a Ref which we do not support yet", assignment);
                             }
                             Rvalue::ThreadLocalRef(..) => {
-                                debug!(
-                                    "{:?} is a ThreadLocalRef which we do not support yet",
-                                    assignment
-                                );
+                                // debug!(
+                                //     "{:?} is a ThreadLocalRef which we do not support yet",
+                                //     assignment
+                                // );
                             }
                             Rvalue::AddressOf(..) => {
-                                debug!(
-                                    "{:?} is a AddressOf which we do not support yet",
-                                    assignment
-                                );
+                                // debug!(
+                                //     "{:?} is a AddressOf which we do not support yet",
+                                //     assignment
+                                // );
                             }
                             Rvalue::Len(..) => {
-                                debug!("{:?} is a Len which we do not support yet", assignment);
+                                // debug!("{:?} is a Len which we do not support yet", assignment);
                             }
                             Rvalue::Cast(..) => {
-                                debug!("{:?} is a Cast which we do not support yet", assignment);
+                                // debug!("{:?} is a Cast which we do not support yet", assignment);
                             }
                             Rvalue::BinaryOp(bin_op, operands) => {
-                                debug!("{:?} is a BinaryOp", assignment);
+                                // debug!("{:?} is a BinaryOp", assignment);
                                 let operand1_var = get_var_for_int_operand(&solver, &operands.0);
                                 let operand2_var = get_var_for_int_operand(&solver, &operands.1);
                                 if let Some(operand1_var) = operand1_var && let Some(operand2_var) = operand2_var {
@@ -633,7 +633,7 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
                                 }
                             }
                             Rvalue::CheckedBinaryOp(bin_op, operands) => {
-                                debug!("{:?} is a CheckedBinaryOp", assignment);
+                                // debug!("{:?} is a CheckedBinaryOp", assignment);
                                 let operand1_var = get_var_for_int_operand(&solver, &operands.0);
                                 let operand2_var = get_var_for_int_operand(&solver, &operands.1);
                                 if let Some(operand1_var) = operand1_var && let Some(operand2_var) = operand2_var {
@@ -710,13 +710,13 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
                                 }
                             }
                             Rvalue::NullaryOp(..) => {
-                                debug!(
-                                    "{:?} is a NullaryOp which we do not support yet",
-                                    assignment
-                                );
+                                // debug!(
+                                //     "{:?} is a NullaryOp which we do not support yet",
+                                //     assignment
+                                // );
                             }
                             Rvalue::UnaryOp(unary_op, operand) => {
-                                debug!("{:?} is a UnaryOp", assignment);
+                                // debug!("{:?} is a UnaryOp", assignment);
                                 match unary_op {
                                     UnOp::Not => {
                                         if body.local_decls[lvalue_place.local].ty.to_string()
@@ -777,22 +777,22 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
                                 }
                             }
                             Rvalue::Discriminant(..) => {
-                                debug!(
-                                    "{:?} is a Discriminant which we do not support yet",
-                                    assignment
-                                );
+                                // debug!(
+                                //     "{:?} is a Discriminant which we do not support yet",
+                                //     assignment
+                                // );
                             }
                             Rvalue::Aggregate(..) => {
-                                debug!(
-                                    "{:?} is a Aggregate which we do not support yet",
-                                    assignment
-                                );
+                                // debug!(
+                                //     "{:?} is a Aggregate which we do not support yet",
+                                //     assignment
+                                // );
                             }
                             Rvalue::ShallowInitBox(..) => {
-                                debug!(
-                                    "{:?} is a ShallowInitBox which we do not support yet",
-                                    assignment
-                                );
+                                // debug!(
+                                //     "{:?} is a ShallowInitBox which we do not support yet",
+                                //     assignment
+                                // );
                             }
                         }
                     }
@@ -860,24 +860,24 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
     let start_node_var = ast::Bool::new_const(solver.get_context(), "node_0");
     // solver.assert(&panic_assignment.implies(&start_node_var).not());
     solver.assert(&start_node_var.not());
-    debug!("{:?}", solver);
+    // debug!("{:?}", solver);
 
     // Attempt resolving the model (and obtaining the respective arg values if panic found)
-    debug!("Resolved value: {:?}", solver.check());
-    // for i in 0..(body.arg_count + 1) {
-    //     let arg = ast::Int::new_const(&solver.get_context(), format!("_{}", (i).to_string()));
-    //     let arg_value = if solver.check() == SatResult::Sat {
-    //         let model = solver.get_model().unwrap();
-    //         Some(model.eval(&arg, true).unwrap().as_i64().unwrap())
-    //     } else {
-    //         None
-    //     };
-    //     debug!("{}: {:?}", arg, arg_value);
-    // }
     if solver.check() == SatResult::Sat {
-        debug!("\n{:?}", solver.get_model().unwrap());
+        debug!("The function is unsafe and a crash may be generated with");
+        for i in 0..(body.arg_count) {
+            let arg = ast::Int::new_const(&solver.get_context(), format!("_{}", (i + 1).to_string()));
+            let model = solver.get_model().unwrap();
+            let arg_value = model.eval(&arg, true).unwrap().as_i64().unwrap();
+            debug!("input {} = {:?}", i + 1, arg_value);
+        }
+    } else {
+        debug!("The function is safe and cannot crash");
     }
-    "Done backward symbolic exec\n".to_string()
+    // if solver.check() == SatResult::Sat {
+    //     debug!("\n{:?}", solver.get_model().unwrap());
+    // }
+    "Done backward symbolic exec for function\n".to_string()
 }
 
 // fn playground() -> String {
@@ -920,13 +920,13 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
 
     pretty_print_mir_body(&_input_body.borrow());
     let forward_edges = get_forward_edges(&_input_body.borrow());
-    debug!("{:?}", forward_edges);
+    debug!("MIR CFG Forward Edges: {:?}", forward_edges);
     let backward_edges = get_backward_edges(&_input_body.borrow());
-    debug!("{:?}", backward_edges);
+    debug!("MIR CFG Backward Edges: {:?}", backward_edges);
     let forward_sorted_nodes = forward_topological_sort(&_input_body.borrow());
-    debug!("{:?}", forward_sorted_nodes);
+    debug!("Forward Topological Sorting of MIR Nodes: {:?}", forward_sorted_nodes);
     let backward_sorted_nodes = backward_topological_sort(&_input_body.borrow());
-    debug!("{:?}", backward_sorted_nodes);
+    debug!("Backward Topological Sorting of MIR Nodes: {:?}", backward_sorted_nodes);
 
     debug!("{}", backward_symbolic_exec(&_input_body.borrow()));
 
