@@ -20,3 +20,5 @@ fn main() {
     sat_unsafe_1(12);
     sat_unsafe_2(-250);
 }
+
+// RUSTC_LOG=rustc_symbolic_exec=debug rustc +stage1 test_3.rs && ./test_3
