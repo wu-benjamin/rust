@@ -418,10 +418,16 @@ fn get_var_for_int_operand<'a>(
     let operand_var;
     match operand {
         Operand::Copy(rvalue_place) => {
-            operand_var = Some(ast::Int::new_const(solver.get_context(), get_var_name_from_place(rvalue_place)));
+            operand_var = Some(ast::Int::new_const(
+                solver.get_context(),
+                get_var_name_from_place(rvalue_place),
+            ));
         }
         Operand::Move(rvalue_place) => {
-            operand_var = Some(ast::Int::new_const(solver.get_context(), get_var_name_from_place(rvalue_place)));
+            operand_var = Some(ast::Int::new_const(
+                solver.get_context(),
+                get_var_name_from_place(rvalue_place),
+            ));
         }
         Operand::Constant(constant) => {
             if let Some(scalar) = constant.literal.try_to_scalar() && let Some(value) = scalar.to_i32().ok() {
@@ -450,10 +456,16 @@ fn get_var_for_bool_operand<'a>(
     let operand_var;
     match operand {
         Operand::Copy(rvalue_place) => {
-            operand_var = Some(ast::Bool::new_const(solver.get_context(), get_var_name_from_place(rvalue_place)));
+            operand_var = Some(ast::Bool::new_const(
+                solver.get_context(),
+                get_var_name_from_place(rvalue_place),
+            ));
         }
         Operand::Move(rvalue_place) => {
-            operand_var = Some(ast::Bool::new_const(solver.get_context(), get_var_name_from_place(rvalue_place)));
+            operand_var = Some(ast::Bool::new_const(
+                solver.get_context(),
+                get_var_name_from_place(rvalue_place),
+            ));
         }
         Operand::Constant(constant) => {
             if let Some(scalar) = constant.literal.try_to_scalar() && let Some(value) = scalar.to_i8().ok() {
@@ -866,7 +878,8 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
     if solver.check() == SatResult::Sat {
         debug!("The function is unsafe and a crash may be generated with");
         for i in 0..(body.arg_count) {
-            let arg = ast::Int::new_const(&solver.get_context(), format!("_{}", (i + 1).to_string()));
+            let arg =
+                ast::Int::new_const(&solver.get_context(), format!("_{}", (i + 1).to_string()));
             let model = solver.get_model().unwrap();
             let arg_value = model.eval(&arg, true).unwrap().as_i64().unwrap();
             debug!("input {} = {:?}", i + 1, arg_value);
