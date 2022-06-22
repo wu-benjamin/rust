@@ -1,0 +1,93 @@
+DEBUG rustc_symbolic_exec Number of Nodes: 4
+DEBUG rustc_symbolic_exec Arg count: 1
+DEBUG rustc_symbolic_exec _0: ()
+DEBUG rustc_symbolic_exec _1: i32
+DEBUG rustc_symbolic_exec _2: ()
+DEBUG rustc_symbolic_exec _3: bool
+DEBUG rustc_symbolic_exec _4: bool
+DEBUG rustc_symbolic_exec _5: i32
+DEBUG rustc_symbolic_exec _6: i32
+DEBUG rustc_symbolic_exec _7: !
+DEBUG rustc_symbolic_exec bb0
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _5 = _1
+DEBUG rustc_symbolic_exec 	Statement: _6 = _1
+DEBUG rustc_symbolic_exec 	Statement: _4 = Eq(move _5, move _6)
+DEBUG rustc_symbolic_exec 	Statement: _3 = Not(move _4)
+DEBUG rustc_symbolic_exec 	Terminator: switchInt(move _3) -> [false: bb2, otherwise: bb1]
+DEBUG rustc_symbolic_exec bb1
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Terminator: core::panicking::panic(const "assertion failed: x == x") -> bb3
+DEBUG rustc_symbolic_exec bb2
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _2 = const ()
+DEBUG rustc_symbolic_exec 	Statement: _0 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: return
+DEBUG rustc_symbolic_exec bb3
+DEBUG rustc_symbolic_exec 	is_cleanup: true
+DEBUG rustc_symbolic_exec 	Terminator: resume
+DEBUG rustc_symbolic_exec MIR CFG Forward Edges: {"3": {"common_end"}, "2": {"common_end"}, "0": {"1", "2"}, "1": {"3"}}
+DEBUG rustc_symbolic_exec MIR CFG Backward Edges: {"3": {"1"}, "2": {"0"}, "0": {}, "1": {"0"}, "common_end": {"3", "2"}}
+DEBUG rustc_symbolic_exec Forward Topological Sorting of MIR Nodes: ["0", "1", "2", "3", "common_end"]
+DEBUG rustc_symbolic_exec Backward Topological Sorting of MIR Nodes: ["common_end", "3", "2", "1", "0"]
+DEBUG rustc_symbolic_exec The function is safe and cannot crash
+DEBUG rustc_symbolic_exec Done backward symbolic exec for function
+
+DEBUG rustc_symbolic_exec Number of Nodes: 4
+DEBUG rustc_symbolic_exec Arg count: 1
+DEBUG rustc_symbolic_exec _0: ()
+DEBUG rustc_symbolic_exec _1: i32
+DEBUG rustc_symbolic_exec _2: ()
+DEBUG rustc_symbolic_exec _3: bool
+DEBUG rustc_symbolic_exec _4: bool
+DEBUG rustc_symbolic_exec _5: i32
+DEBUG rustc_symbolic_exec _6: !
+DEBUG rustc_symbolic_exec bb0
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _5 = _1
+DEBUG rustc_symbolic_exec 	Statement: _4 = Lt(move _5, const 13_i32)
+DEBUG rustc_symbolic_exec 	Statement: _3 = Not(move _4)
+DEBUG rustc_symbolic_exec 	Terminator: switchInt(move _3) -> [false: bb2, otherwise: bb1]
+DEBUG rustc_symbolic_exec bb1
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Terminator: core::panicking::panic(const "assertion failed: x < 13") -> bb3
+DEBUG rustc_symbolic_exec bb2
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _2 = const ()
+DEBUG rustc_symbolic_exec 	Statement: _0 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: return
+DEBUG rustc_symbolic_exec bb3
+DEBUG rustc_symbolic_exec 	is_cleanup: true
+DEBUG rustc_symbolic_exec 	Terminator: resume
+DEBUG rustc_symbolic_exec MIR CFG Forward Edges: {"3": {"common_end"}, "2": {"common_end"}, "0": {"1", "2"}, "1": {"3"}}
+DEBUG rustc_symbolic_exec MIR CFG Backward Edges: {"3": {"1"}, "2": {"0"}, "0": {}, "1": {"0"}, "common_end": {"3", "2"}}
+DEBUG rustc_symbolic_exec Forward Topological Sorting of MIR Nodes: ["0", "1", "2", "3", "common_end"]
+DEBUG rustc_symbolic_exec Backward Topological Sorting of MIR Nodes: ["common_end", "3", "2", "1", "0"]
+DEBUG rustc_symbolic_exec The function is unsafe and a crash may be generated with
+DEBUG rustc_symbolic_exec input 1 = 2147483629
+DEBUG rustc_symbolic_exec Done backward symbolic exec for function
+
+DEBUG rustc_symbolic_exec Number of Nodes: 4
+DEBUG rustc_symbolic_exec Arg count: 0
+DEBUG rustc_symbolic_exec _0: ()
+DEBUG rustc_symbolic_exec _1: ()
+DEBUG rustc_symbolic_exec _2: ()
+DEBUG rustc_symbolic_exec bb0
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Terminator: _1 = unsat_safe(const 12_i32) -> [return: bb1, unwind: bb3]
+DEBUG rustc_symbolic_exec bb1
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Terminator: _2 = sat_unsafe(const -250_i32) -> [return: bb2, unwind: bb3]
+DEBUG rustc_symbolic_exec bb2
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _0 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: return
+DEBUG rustc_symbolic_exec bb3
+DEBUG rustc_symbolic_exec 	is_cleanup: true
+DEBUG rustc_symbolic_exec 	Terminator: resume
+DEBUG rustc_symbolic_exec MIR CFG Forward Edges: {"3": {"common_end"}, "2": {"common_end"}, "0": {"1", "3"}, "1": {"3", "2"}}
+DEBUG rustc_symbolic_exec MIR CFG Backward Edges: {"3": {"1", "0"}, "2": {"1"}, "0": {}, "1": {"0"}, "common_end": {"3", "2"}}
+DEBUG rustc_symbolic_exec Forward Topological Sorting of MIR Nodes: ["0", "1", "2", "3", "common_end"]
+DEBUG rustc_symbolic_exec Backward Topological Sorting of MIR Nodes: ["common_end", "3", "2", "1", "0"]
+DEBUG rustc_symbolic_exec The function is unsafe and a crash may be generated with
+DEBUG rustc_symbolic_exec Done backward symbolic exec for function

@@ -1,0 +1,184 @@
+DEBUG rustc_symbolic_exec Number of Nodes: 6
+DEBUG rustc_symbolic_exec Arg count: 1
+DEBUG rustc_symbolic_exec _0: i32
+DEBUG rustc_symbolic_exec _1: i32
+DEBUG rustc_symbolic_exec _2: !
+DEBUG rustc_symbolic_exec _3: ()
+DEBUG rustc_symbolic_exec _4: bool
+DEBUG rustc_symbolic_exec _5: i32
+DEBUG rustc_symbolic_exec _6: i32
+DEBUG rustc_symbolic_exec _7: (i32, bool)
+DEBUG rustc_symbolic_exec bb0
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _5 = _1
+DEBUG rustc_symbolic_exec 	Statement: _4 = Gt(move _5, const 0_i32)
+DEBUG rustc_symbolic_exec 	Terminator: switchInt(move _4) -> [false: bb3, otherwise: bb1]
+DEBUG rustc_symbolic_exec bb1
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _6 = _1
+DEBUG rustc_symbolic_exec 	Statement: _7 = CheckedMul(const -1_i32, _6)
+DEBUG rustc_symbolic_exec 	Terminator: assert(!move (_7.1: bool), "attempt to compute `{} * {}`, which would overflow", const -1_i32, move _6) -> [success: bb2, unwind: bb5]
+DEBUG rustc_symbolic_exec bb2
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _1 = move (_7.0: i32)
+DEBUG rustc_symbolic_exec 	Statement: _3 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: goto -> bb4
+DEBUG rustc_symbolic_exec bb3
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _3 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: goto -> bb4
+DEBUG rustc_symbolic_exec bb4
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _0 = _1
+DEBUG rustc_symbolic_exec 	Terminator: return
+DEBUG rustc_symbolic_exec bb5
+DEBUG rustc_symbolic_exec 	is_cleanup: true
+DEBUG rustc_symbolic_exec 	Terminator: resume
+DEBUG rustc_symbolic_exec MIR CFG Forward Edges: {"3": {"4"}, "2": {"4"}, "0": {"3", "1"}, "1": {"5", "2"}, "5": {"common_end"}, "4": {"common_end"}}
+DEBUG rustc_symbolic_exec MIR CFG Backward Edges: {"3": {"0"}, "2": {"1"}, "0": {}, "1": {"0"}, "5": {"1"}, "4": {"3", "2"}, "common_end": {"5", "4"}}
+DEBUG rustc_symbolic_exec Forward Topological Sorting of MIR Nodes: ["0", "1", "2", "3", "4", "5", "common_end"]
+DEBUG rustc_symbolic_exec Backward Topological Sorting of MIR Nodes: ["common_end", "5", "4", "3", "2", "1", "0"]
+DEBUG rustc_symbolic_exec The function is safe and cannot crash
+DEBUG rustc_symbolic_exec Done backward symbolic exec for function
+
+DEBUG rustc_symbolic_exec Number of Nodes: 6
+DEBUG rustc_symbolic_exec Arg count: 1
+DEBUG rustc_symbolic_exec _0: i32
+DEBUG rustc_symbolic_exec _1: i32
+DEBUG rustc_symbolic_exec _2: !
+DEBUG rustc_symbolic_exec _3: ()
+DEBUG rustc_symbolic_exec _4: bool
+DEBUG rustc_symbolic_exec _5: i32
+DEBUG rustc_symbolic_exec _6: i32
+DEBUG rustc_symbolic_exec _7: (i32, bool)
+DEBUG rustc_symbolic_exec bb0
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _5 = _1
+DEBUG rustc_symbolic_exec 	Statement: _4 = Lt(move _5, const 0_i32)
+DEBUG rustc_symbolic_exec 	Terminator: switchInt(move _4) -> [false: bb3, otherwise: bb1]
+DEBUG rustc_symbolic_exec bb1
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _6 = _1
+DEBUG rustc_symbolic_exec 	Statement: _7 = CheckedMul(const -1_i32, _6)
+DEBUG rustc_symbolic_exec 	Terminator: assert(!move (_7.1: bool), "attempt to compute `{} * {}`, which would overflow", const -1_i32, move _6) -> [success: bb2, unwind: bb5]
+DEBUG rustc_symbolic_exec bb2
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _1 = move (_7.0: i32)
+DEBUG rustc_symbolic_exec 	Statement: _3 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: goto -> bb4
+DEBUG rustc_symbolic_exec bb3
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _3 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: goto -> bb4
+DEBUG rustc_symbolic_exec bb4
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _0 = _1
+DEBUG rustc_symbolic_exec 	Terminator: return
+DEBUG rustc_symbolic_exec bb5
+DEBUG rustc_symbolic_exec 	is_cleanup: true
+DEBUG rustc_symbolic_exec 	Terminator: resume
+DEBUG rustc_symbolic_exec MIR CFG Forward Edges: {"3": {"4"}, "2": {"4"}, "0": {"3", "1"}, "1": {"5", "2"}, "5": {"common_end"}, "4": {"common_end"}}
+DEBUG rustc_symbolic_exec MIR CFG Backward Edges: {"3": {"0"}, "2": {"1"}, "0": {}, "1": {"0"}, "5": {"1"}, "4": {"3", "2"}, "common_end": {"5", "4"}}
+DEBUG rustc_symbolic_exec Forward Topological Sorting of MIR Nodes: ["0", "1", "2", "3", "4", "5", "common_end"]
+DEBUG rustc_symbolic_exec Backward Topological Sorting of MIR Nodes: ["common_end", "5", "4", "3", "2", "1", "0"]
+DEBUG rustc_symbolic_exec The function is unsafe and a crash may be generated with
+DEBUG rustc_symbolic_exec input 1 = -2147483648
+DEBUG rustc_symbolic_exec Done backward symbolic exec for function
+
+DEBUG rustc_symbolic_exec Number of Nodes: 10
+DEBUG rustc_symbolic_exec Arg count: 0
+DEBUG rustc_symbolic_exec _0: ()
+DEBUG rustc_symbolic_exec _1: ()
+DEBUG rustc_symbolic_exec _2: ()
+DEBUG rustc_symbolic_exec _3: Arguments
+DEBUG rustc_symbolic_exec _4: &[&str]
+DEBUG rustc_symbolic_exec _5: &[&str; 2]
+DEBUG rustc_symbolic_exec _6: &[&str; 2]
+DEBUG rustc_symbolic_exec _7: [&str; 2]
+DEBUG rustc_symbolic_exec _8: &[ArgumentV1]
+DEBUG rustc_symbolic_exec _9: &[ArgumentV1; 1]
+DEBUG rustc_symbolic_exec _10: &[ArgumentV1; 1]
+DEBUG rustc_symbolic_exec _11: [ArgumentV1; 1]
+DEBUG rustc_symbolic_exec _12: ArgumentV1
+DEBUG rustc_symbolic_exec _13: &i32
+DEBUG rustc_symbolic_exec _14: &i32
+DEBUG rustc_symbolic_exec _15: i32
+DEBUG rustc_symbolic_exec _16: ()
+DEBUG rustc_symbolic_exec _17: ()
+DEBUG rustc_symbolic_exec _18: Arguments
+DEBUG rustc_symbolic_exec _19: &[&str]
+DEBUG rustc_symbolic_exec _20: &[&str; 2]
+DEBUG rustc_symbolic_exec _21: &[&str; 2]
+DEBUG rustc_symbolic_exec _22: [&str; 2]
+DEBUG rustc_symbolic_exec _23: &[ArgumentV1]
+DEBUG rustc_symbolic_exec _24: &[ArgumentV1; 1]
+DEBUG rustc_symbolic_exec _25: &[ArgumentV1; 1]
+DEBUG rustc_symbolic_exec _26: [ArgumentV1; 1]
+DEBUG rustc_symbolic_exec _27: ArgumentV1
+DEBUG rustc_symbolic_exec _28: &i32
+DEBUG rustc_symbolic_exec _29: &i32
+DEBUG rustc_symbolic_exec _30: i32
+DEBUG rustc_symbolic_exec _31: &[&str; 2]
+DEBUG rustc_symbolic_exec _32: &[&str; 2]
+DEBUG rustc_symbolic_exec bb0
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _32 = const main::promoted[1]
+DEBUG rustc_symbolic_exec 	Statement: _6 = &(*_32)
+DEBUG rustc_symbolic_exec 	Statement: _5 = &(*_6)
+DEBUG rustc_symbolic_exec 	Statement: _4 = move _5 as &[&str] (Pointer(Unsize))
+DEBUG rustc_symbolic_exec 	Terminator: _15 = neg_abs(const 2_i32) -> [return: bb1, unwind: bb9]
+DEBUG rustc_symbolic_exec bb1
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _14 = &_15
+DEBUG rustc_symbolic_exec 	Statement: _13 = &(*_14)
+DEBUG rustc_symbolic_exec 	Terminator: _12 = ArgumentV1::new_display::<i32>(move _13) -> [return: bb2, unwind: bb9]
+DEBUG rustc_symbolic_exec bb2
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _11 = [move _12]
+DEBUG rustc_symbolic_exec 	Statement: _10 = &_11
+DEBUG rustc_symbolic_exec 	Statement: _9 = &(*_10)
+DEBUG rustc_symbolic_exec 	Statement: _8 = move _9 as &[std::fmt::ArgumentV1] (Pointer(Unsize))
+DEBUG rustc_symbolic_exec 	Terminator: _3 = Arguments::new_v1(move _4, move _8) -> [return: bb3, unwind: bb9]
+DEBUG rustc_symbolic_exec bb3
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Terminator: _2 = _print(move _3) -> [return: bb4, unwind: bb9]
+DEBUG rustc_symbolic_exec bb4
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _1 = const ()
+DEBUG rustc_symbolic_exec 	Statement: _31 = const main::promoted[0]
+DEBUG rustc_symbolic_exec 	Statement: _21 = &(*_31)
+DEBUG rustc_symbolic_exec 	Statement: _20 = &(*_21)
+DEBUG rustc_symbolic_exec 	Statement: _19 = move _20 as &[&str] (Pointer(Unsize))
+DEBUG rustc_symbolic_exec 	Terminator: _30 = abs(const -2_i32) -> [return: bb5, unwind: bb9]
+DEBUG rustc_symbolic_exec bb5
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _29 = &_30
+DEBUG rustc_symbolic_exec 	Statement: _28 = &(*_29)
+DEBUG rustc_symbolic_exec 	Terminator: _27 = ArgumentV1::new_display::<i32>(move _28) -> [return: bb6, unwind: bb9]
+DEBUG rustc_symbolic_exec bb6
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _26 = [move _27]
+DEBUG rustc_symbolic_exec 	Statement: _25 = &_26
+DEBUG rustc_symbolic_exec 	Statement: _24 = &(*_25)
+DEBUG rustc_symbolic_exec 	Statement: _23 = move _24 as &[std::fmt::ArgumentV1] (Pointer(Unsize))
+DEBUG rustc_symbolic_exec 	Terminator: _18 = Arguments::new_v1(move _19, move _23) -> [return: bb7, unwind: bb9]
+DEBUG rustc_symbolic_exec bb7
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Terminator: _17 = _print(move _18) -> [return: bb8, unwind: bb9]
+DEBUG rustc_symbolic_exec bb8
+DEBUG rustc_symbolic_exec 	is_cleanup: false
+DEBUG rustc_symbolic_exec 	Statement: _16 = const ()
+DEBUG rustc_symbolic_exec 	Statement: _0 = const ()
+DEBUG rustc_symbolic_exec 	Terminator: return
+DEBUG rustc_symbolic_exec bb9
+DEBUG rustc_symbolic_exec 	is_cleanup: true
+DEBUG rustc_symbolic_exec 	Terminator: resume
+DEBUG rustc_symbolic_exec MIR CFG Forward Edges: {"0": {"1", "9"}, "5": {"6", "9"}, "4": {"5", "9"}, "9": {"common_end"}, "3": {"4", "9"}, "8": {"common_end"}, "2": {"3", "9"}, "7": {"8", "9"}, "1": {"2", "9"}, "6": {"9", "7"}}
+DEBUG rustc_symbolic_exec MIR CFG Backward Edges: {"common_end": {"8", "9"}, "0": {}, "5": {"4"}, "4": {"3"}, "9": {"0", "5", "4", "3", "2", "7", "1", "6"}, "3": {"2"}, "8": {"7"}, "2": {"1"}, "7": {"6"}, "1": {"0"}, "6": {"5"}}
+DEBUG rustc_symbolic_exec Forward Topological Sorting of MIR Nodes: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "common_end"]
+DEBUG rustc_symbolic_exec Backward Topological Sorting of MIR Nodes: ["common_end", "9", "8", "7", "6", "5", "4", "3", "2", "1", "0"]
+DEBUG rustc_symbolic_exec The function is unsafe and a crash may be generated with
+DEBUG rustc_symbolic_exec Done backward symbolic exec for function
+
+-2
+2
