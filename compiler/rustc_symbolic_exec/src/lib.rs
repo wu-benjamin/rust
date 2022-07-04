@@ -15,8 +15,8 @@ use tracing::debug;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::WithNumNodes;
-use rustc_data_structures::graph::WithStartNode;
-use rustc_data_structures::graph::WithSuccessors;
+// use rustc_data_structures::graph::WithStartNode;
+// use rustc_data_structures::graph::WithSuccessors;
 
 use rustc_hir::def_id::LocalDefId;
 use rustc_middle::mir::terminator::TerminatorKind;
@@ -92,10 +92,6 @@ fn pretty_print_mir_body(body: &Body<'_>) -> () {
             debug!("\tNo terminator");
         }
     }
-    debug!("Start Node: {:?}", body.start_node());
-    body.successors(body.start_node()).for_each(|bb| {
-        debug!("Successor to Start: {:?}", bb);
-    });
 }
 
 fn get_forward_edges(body: &Body<'_>) -> FxHashMap<String, FxHashSet<String>> {
@@ -145,6 +141,12 @@ fn get_forward_edges(body: &Body<'_>) -> FxHashMap<String, FxHashSet<String>> {
                     if let Some(cleanup) = cleanup {
                         node_edges.insert(cleanup.index().to_string());
                     }
+                }
+                TerminatorKind::FalseEdge { real_target, .. } => {
+                    node_edges.insert(real_target.index().to_string());
+                }
+                TerminatorKind::FalseUnwind { real_target, .. } => {
+                    node_edges.insert(real_target.index().to_string());
                 }
                 _ => {
                     debug!("Terminator Kind {:?} Not Implemented Yet", terminator.kind);
@@ -217,6 +219,7 @@ fn forward_topological_sort(body: &Body<'_>) -> Vec<String> {
             Some(..) => (),
             None => {
                 debug!("MIR CFG is cyclic which is not supported");
+                sorted = Vec::new();
                 break;
             }
         }
@@ -863,21 +866,20 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
     debug!("{:?}", solver);
 
     // Attempt resolving the model (and obtaining the respective arg values if panic found)
-    debug!("Resolved value: {:?}", solver.check());
-    // for i in 0..(body.arg_count + 1) {
-    //     let arg = ast::Int::new_const(&solver.get_context(), format!("_{}", (i).to_string()));
-    //     let arg_value = if solver.check() == SatResult::Sat {
-    //         let model = solver.get_model().unwrap();
-    //         Some(model.eval(&arg, true).unwrap().as_i64().unwrap())
-    //     } else {
-    //         None
-    //     };
-    //     debug!("{}: {:?}", arg, arg_value);
-    // }
     if solver.check() == SatResult::Sat {
-        debug!("\n{:?}", solver.get_model().unwrap());
+        debug!("The function is unsafe and a crash may be generated with");
+        for i in 0..(body.arg_count) {
+            let arg =
+                ast::Int::new_const(&solver.get_context(), format!("_{}", (i + 1).to_string()));
+            let model = solver.get_model().unwrap();
+            let arg_value = model.eval(&arg, true).unwrap().as_i64().unwrap();
+            debug!("input {} = {:?}", i + 1, arg_value);
+        }
+            debug!("\n{:?}", solver.get_model().unwrap());
+    } else {
+        debug!("The function is safe and cannot crash");
     }
-    "Done backward symbolic exec\n".to_string()
+    return "Done backward symbolic exec for function\n".to_string();
 }
 
 // fn playground() -> String {
@@ -924,6 +926,10 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
     let backward_edges = get_backward_edges(&_input_body.borrow());
     debug!("{:?}", backward_edges);
     let forward_sorted_nodes = forward_topological_sort(&_input_body.borrow());
+    if forward_sorted_nodes.len() == 0 {
+        debug!("Failed to perform backward symbolic exec for function; please see debug output for more info\n");
+        return;
+    }
     debug!("{:?}", forward_sorted_nodes);
     let backward_sorted_nodes = backward_topological_sort(&_input_body.borrow());
     debug!("{:?}", backward_sorted_nodes);
@@ -941,4 +947,5 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
     // debug!("example Z3 done");
 
     // debug!("{}", playground());
+    return;
 }
