@@ -875,7 +875,7 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
             let arg_value = model.eval(&arg, true).unwrap().as_i64().unwrap();
             debug!("input {} = {:?}", i + 1, arg_value);
         }
-            debug!("\n{:?}", solver.get_model().unwrap());
+        debug!("\n{:?}", solver.get_model().unwrap());
     } else {
         debug!("The function is safe and cannot crash");
     }
@@ -927,7 +927,9 @@ fn mir_symbolic_exec<'tcx>(tcx: TyCtxt<'tcx>, _def: ty::WithOptConstParam<LocalD
     debug!("{:?}", backward_edges);
     let forward_sorted_nodes = forward_topological_sort(&_input_body.borrow());
     if forward_sorted_nodes.len() == 0 {
-        debug!("Failed to perform backward symbolic exec for function; please see debug output for more info\n");
+        debug!(
+            "Failed to perform backward symbolic exec for function; please see debug output for more info\n"
+        );
         return;
     }
     debug!("{:?}", forward_sorted_nodes);
