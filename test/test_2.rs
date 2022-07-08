@@ -5,12 +5,12 @@ fn test1() -> i32 {
     x
 }
 
-fn test2(mut x: i32) -> i32 {
-    x = 2;
-    let y = if x > 0 { -1 * x } else { x };
-    assert!(y <= 0);
-    return y;
-}
+// fn test2(mut x: i32) -> i32 {
+//     x = 2;
+//     let y = if x > 0 { -1 * x } else { x };
+//     assert!(y <= 0);
+//     return y;
+// }
 
 // fn test3() -> i32 {
 //     let mut x = 0;

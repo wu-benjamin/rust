@@ -808,7 +808,7 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
         }
 
         // handle assign panic
-        if let Ok(n) = node.parse() && !body.basic_blocks()[BasicBlock::from_usize(n)].is_cleanup {
+        if let Ok(n) = node.parse() && body.basic_blocks()[BasicBlock::from_usize(n)].is_cleanup {
             if let Some(successors) = forward_edges.get(&node) {
                 let mut is_predecessor_of_end_node = false;
                 for successor in successors {
@@ -819,11 +819,18 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
                 }
                 if is_predecessor_of_end_node {
                     let panic_var = ast::Bool::new_const(solver.get_context(), PANIC_VAR_NAME);
-                    let panic_value = ast::Bool::from_bool(solver.get_context(), false);
+                    let panic_value = ast::Bool::from_bool(solver.get_context(), true);
                     let panic_assignment = panic_var._eq(&panic_value);
                     node_var = panic_assignment.implies(&node_var);
                 }
             }
+        }
+
+        if node == "0" {
+            let panic_var = ast::Bool::new_const(solver.get_context(), PANIC_VAR_NAME);
+            let panic_value = ast::Bool::from_bool(solver.get_context(), false);
+            let panic_assignment = panic_var._eq(&panic_value);
+            node_var = panic_assignment.implies(&node_var);
         }
 
         let mut entry_conditions = ast::Bool::from_bool(solver.get_context(), false);
