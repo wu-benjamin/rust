@@ -808,37 +808,39 @@ fn backward_symbolic_exec(body: &Body<'_>) -> String {
         }
 
         // handle assign panic
-        if let Ok(n) = node.parse() && body.basic_blocks()[BasicBlock::from_usize(n)].is_cleanup {
-            if let Some(successors) = forward_edges.get(&node) {
-                let mut is_predecessor_of_end_node = false;
-                for successor in successors {
-                    if successor == COMMON_END_NODE_NAME {
-                        is_predecessor_of_end_node = true;
-                        break;
-                    }
+        if let Some(successors) = forward_edges.get(&node) {
+            let mut is_predecessor_of_end_node = false;
+            for successor in successors {
+                if successor == COMMON_END_NODE_NAME {
+                    is_predecessor_of_end_node = true;
+                    break;
                 }
-                if is_predecessor_of_end_node {
-                    let panic_var = ast::Bool::new_const(solver.get_context(), PANIC_VAR_NAME);
-                    let panic_value = ast::Bool::from_bool(solver.get_context(), true);
-                    let panic_assignment = panic_var._eq(&panic_value);
-                    node_var = panic_assignment.implies(&node_var);
+            }
+            if is_predecessor_of_end_node {
+                let mut is_panic = false;
+                if let Ok(n) = node.parse() && body.basic_blocks()[BasicBlock::from_usize(n)].is_cleanup {
+                    is_panic = true;
                 }
+                let panic_var = ast::Bool::new_const(solver.get_context(), PANIC_VAR_NAME);
+                let panic_value = ast::Bool::from_bool(solver.get_context(), is_panic);
+                let panic_assignment = panic_var._eq(&panic_value);
+                node_var = panic_assignment.implies(&node_var);
             }
         }
 
-        if node == "0" {
-            let panic_var = ast::Bool::new_const(solver.get_context(), PANIC_VAR_NAME);
-            let panic_value = ast::Bool::from_bool(solver.get_context(), false);
-            let panic_assignment = panic_var._eq(&panic_value);
-            node_var = panic_assignment.implies(&node_var);
-        }
+        // if node == "0" {
+        //     let panic_var = ast::Bool::new_const(solver.get_context(), PANIC_VAR_NAME);
+        //     let panic_value = ast::Bool::from_bool(solver.get_context(), false);
+        //     let panic_assignment = panic_var._eq(&panic_value);
+        //     node_var = panic_assignment.implies(&node_var);
+        // }
 
-        let mut entry_conditions = ast::Bool::from_bool(solver.get_context(), false);
+        let mut entry_conditions = ast::Bool::from_bool(solver.get_context(), true);
         if let Some(predecessors) = backward_edges.get(&node) && predecessors.len() > 0 {
             for predecessor in predecessors {
                 // get conditions
                 let entry_condition = get_entry_condition(&solver, body, &predecessor, &node);
-                entry_conditions = ast::Bool::or(solver.get_context(), &[&entry_conditions, &entry_condition]);
+                entry_conditions = ast::Bool::and(solver.get_context(), &[&entry_conditions, &entry_condition]);
             }
         } else {
             entry_conditions = ast::Bool::from_bool(solver.get_context(), true);
